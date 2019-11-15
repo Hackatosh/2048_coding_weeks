@@ -275,17 +275,21 @@ class GameGUI:
                 self.__grid_labels[i][j].config(text=self.__theme[cell], bg=TILES_BG_COLOR[cell],
                                                 fg=TILES_FG_COLOR[cell])
 
+    def __reset_game_ui(self):
+        self.__game.reset_game()
+        self.update()
+
     def play_kp(self, command: str):
         if not self.__game.is_game_finished():
             self.__is_finished = self.__game.play(command)
             self.update()
         if self.__is_finished:
             if self.__game.is_game_won():
-                PopUpGUI.create_pop_up_gui_and_show("Victory !","Congratulations, you have won !", "Reset the game",self.__game.reset_game)
+                PopUpGUI.create_pop_up_gui_and_show("Victory !","Congratulations, you have won !", "Reset the game",self.__reset_game_ui)
             elif self.__game.is_game_lost():
-                PopUpGUI.create_pop_up_gui_and_show("Defeat !","Suck it up looser", "Reset the game",self.__game.reset_game)
+                PopUpGUI.create_pop_up_gui_and_show("Defeat !","Suck it up looser", "Reset the game",self.__reset_game_ui)
             else:
-                PopUpGUI.create_pop_up_gui_and_show("Uhhh what ?","This window shouldn't show up bro", "Reset the game",self.__game.reset_game)
+                PopUpGUI.create_pop_up_gui_and_show("Uhhh what ?","This window shouldn't show up bro", "Reset the game",self.__reset_game_ui)
 
     def kp_left(self, event):
         self.play_kp("l")
@@ -307,17 +311,19 @@ class GameGUI:
 
 class PopUpGUI:
 
-    def __init__(self,title, text, button_text,action):
+    def __init__(self,title, text, button_text,button_action):
         self.__title = title
         self.__text = text
         self.__button_text = button_text
-        self.__action = action
+        self.__button_action = button_action
         self.__root = Tk()
         self.__root.title(self.__title)
         self.__frame = Frame(self.__root)
         self.__text = Label(self.__frame, text=self.__text)
         self.__launch_button = Button(self.__frame, text=self.__button_text, activebackground="blue", fg="red",
-                                      command=self.__action)
+                                      command=self.__button_action)
+
+
 
     def show(self):
         self.__text.pack()
@@ -374,7 +380,6 @@ class ConfigGUI:
 
 def play():
     ConfigGUI.create_config_gui_and_show()
-
 
 
 if __name__ == '__main__':
