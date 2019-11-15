@@ -213,7 +213,7 @@ class Game:
         return is_finished
 
     def reset_game(self):
-        self.__grid = [[0 for i in range(self.__grid_size)] for i in range(self.__grid_size)]
+        self.__grid = Game.create_game(self.__grid_size,self.__max_value).grid
 
     @staticmethod
     def create_game(size: int, max_value: int):
@@ -321,9 +321,12 @@ class PopUpGUI:
         self.__frame = Frame(self.__root)
         self.__text = Label(self.__frame, text=self.__text)
         self.__launch_button = Button(self.__frame, text=self.__button_text, activebackground="blue", fg="red",
-                                      command=self.__button_action)
+                                      command=self.__on__click)
 
 
+    def __on__click(self):
+        self.__button_action()
+        self.__root.destroy()
 
     def show(self):
         self.__text.pack()
